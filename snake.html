@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <title>React Snake</title>
+    <link rel="stylesheet" href="snake.css" media="screen" title="no title" charset="utf-8">
+    <script src="https://fb.me/react-0.13.3.js"></script>
+    <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+
+  </head>
+  <body>
+    <script type="text/jsx">
+    var Board = React.createClass({
+      getInitialState: function() {
+        var states = [];
+        for (var i = 0; i <= 10; i++) {
+          var row = [];
+          for (var j = 0; j <= 10; j++) {
+            row.push('empty');
+          }
+          states.push(row);
+        }
+        return {states: states, snake: {segments: [[5,5]], direction: "N"}}
+      },
+      componentDidMount: function() {
+        var newStates = this.drawSnake();
+        this.setState({states: newStates});
+      },
+      drawSnake: function() {
+        var newStates = this.state.states;
+        this.state.snake.segments.forEach(function(segment){
+          var x = segment[0],
+              y = segment[1]
+          newStates[x][y] = "snake";
+        });
+        return newStates;
+      },
+      render: function() {
+        var tiles = [];
+        for(var i=0;i<=10;i++) {
+          var row = []
+          for(var j=0;j<=10;j++) {
+            row.push(<Tile type={this.state.states[i][j]} />);
+          }
+          tiles.push(<ul>{row}</ul>);
+        }
+        return (<div snake={this.state.snake} className="board">{tiles}</div>);
+      }
+    });
+
+    var Tile = React.createClass({
+      getInitialState: function() {
+        return {type: 'empty'};
+      },
+      render: function() {
+        return (<li className={this.props.type} type={this.props.type}></li>)
+      }
+    });
+
+    React.render(<Board />, document.body);
+
+    </script>
+  </body>
+</html>
